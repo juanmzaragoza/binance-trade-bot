@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import random
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from typing import List, Optional, Union
@@ -133,7 +134,7 @@ class Database:
                 pairs = pairs.filter(Pair.enabled.is_(True))
             pairs = pairs.all()
             session.expunge_all()
-            return pairs
+            return random.sample(pairs, 30)
 
     def get_pairs(self, only_enabled=True) -> List[Pair]:
         session: Session
