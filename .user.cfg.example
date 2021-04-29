@@ -10,3 +10,6 @@ scout_sleep_time=5
 strategy=default
 buy_timeout=0
 sell_timeout=0
+enable_update_values=False
+enable_prune_scout_history=False
+enable_prune_value_history=False

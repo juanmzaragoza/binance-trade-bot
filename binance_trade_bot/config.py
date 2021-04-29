@@ -21,6 +21,9 @@ class Config:  # pylint: disable=too-few-public-methods,too-many-instance-attrib
             "strategy": "default",
             "sell_timeout": "0",
             "buy_timeout": "0",
+            "enable_update_values": False,
+            "enable_prune_scout_history": False,
+            "enable_prune_value_history": False,
         }
 
         if not os.path.exists(CFG_FL_NAME):
@@ -70,3 +73,13 @@ class Config:  # pylint: disable=too-few-public-methods,too-many-instance-attrib
 
         self.SELL_TIMEOUT = os.environ.get("SELL_TIMEOUT") or config.get(USER_CFG_SECTION, "sell_timeout")
         self.BUY_TIMEOUT = os.environ.get("BUY_TIMEOUT") or config.get(USER_CFG_SECTION, "buy_timeout")
+
+        self.ENABLE_UPDATE_VALUES = (
+            (os.environ.get("ENABLE_UPDATE_VALUES") or config.get(USER_CFG_SECTION, "enable_update_values")) == "True"
+        )
+        self.ENABLE_PRUNE_SCOUT_HISTORY = (
+            os.environ.get("ENABLE_PRUNE_SCOUT_HISTORY") or config.get(USER_CFG_SECTION, "enable_prune_scout_history") == "True"
+        )
+        self.ENABLE_PRUNE_VALUE_HISTORY = (
+            os.environ.get("ENABLE_PRUNE_VALUE_HISTORY") or config.get(USER_CFG_SECTION, "enable_prune_value_history") == "True"
+        )

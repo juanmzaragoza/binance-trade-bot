@@ -33,9 +33,14 @@ def main():
 
     schedule = SafeScheduler(logger)
     schedule.every(config.SCOUT_SLEEP_TIME).seconds.do(trader.scout).tag("scouting")
-    schedule.every(1).minutes.do(trader.update_values).tag("updating value history")
-    schedule.every(1).minutes.do(db.prune_scout_history).tag("pruning scout history")
-    schedule.every(1).hours.do(db.prune_value_history).tag("pruning value history")
+    if config.ENABLE_UPDATE_VALUES:
+        schedule.every(1).minutes.do(trader.update_values).tag("updating value history")
+    if config.ENABLE_PRUNE_SCOUT_HISTORY:
+        schedule.every(1).minutes.do(db.prune_scout_history).tag("pruning scout history")
+    if config.ENABLE_PRUNE_VALUE_HISTORY:
+        schedule.every(1).hours.do(db.prune_value_history).tag("pruning value history")
+
+    print(schedule.jobs)
 
     while True:
         schedule.run_pending()
