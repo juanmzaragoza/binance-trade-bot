@@ -83,3 +83,7 @@ class Config:  # pylint: disable=too-few-public-methods,too-many-instance-attrib
         self.ENABLE_PRUNE_VALUE_HISTORY = (
             os.environ.get("ENABLE_PRUNE_VALUE_HISTORY") or config.get(USER_CFG_SECTION, "enable_prune_value_history") == "True"
         )
+
+        self.CHECK_BETWEEN_RATIOS = (
+            os.environ.get("CHECK_BETWEEN_RATIOS") or config.get(USER_CFG_SECTION, "check_between_ratios") == "True"
+        )

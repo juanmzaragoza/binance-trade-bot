@@ -13,3 +13,4 @@ sell_timeout=0
 enable_update_values=False
 enable_prune_scout_history=False
 enable_prune_value_history=False
+check_between_ratios=True

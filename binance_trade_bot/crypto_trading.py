@@ -40,8 +40,6 @@ def main():
     if config.ENABLE_PRUNE_VALUE_HISTORY:
         schedule.every(1).hours.do(db.prune_value_history).tag("pruning value history")
 
-    print(schedule.jobs)
-
     while True:
         schedule.run_pending()
         time.sleep(1)

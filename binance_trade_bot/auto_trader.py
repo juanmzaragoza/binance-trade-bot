@@ -137,6 +137,12 @@ class AutoTrader:
             ratio_dict[pair] = (
                 coin_opt_coin_ratio - transaction_fee * self.config.SCOUT_MULTIPLIER * coin_opt_coin_ratio
             ) - pair.ratio
+
+            if self.config.CHECK_BETWEEN_RATIOS:
+                if ratio_dict[pair] > 0:
+                    self.logger.info(f"Will be jumping from {coin} to {pair.to_coin_id}")
+                    self.transaction_through_bridge(pair, all_tickers)
+                    return ratio_dict
         return ratio_dict
 
     def _jump_to_best_coin(self, coin: Coin, coin_price: float, all_tickers: AllTickers):
@@ -145,22 +151,22 @@ class AutoTrader:
         """
         ratio_dict = self._get_ratios(coin, coin_price, all_tickers)
 
-        # keep only ratios bigger than zero
-        ratio_dict = {k: v for k, v in ratio_dict.items() if v > 0}
-
-        # for k, v in ratio_dict.items():
-        #    print(f"{k} --> {v}",
-        #          end="\n")
-        # keep only ratios bigger than zero
-        # ratio_dict = {k: v for k, v in ratio_dict.items() if v > 0}
-        
-        # if we have any viable options, pick the one with the biggest ratio
-        if ratio_dict:
-            best_pair = max(ratio_dict, key=ratio_dict.get)
-            self.logger.info(f"Will be jumping from {coin} to {best_pair.to_coin_id}")
-            self.transaction_through_bridge(best_pair, all_tickers)
+        if self.config.CHECK_BETWEEN_RATIOS:
+            for k, v in ratio_dict.items():
+                print(f"{datetime.now()} - {k.from_coin} -> {k.to_coin}: {v} %",
+                      end="\n")
+            print(f"{datetime.now()} - Finished scout jumping before get all over the coins!",
+                  end="\n")
         else:
-            self.logger.info(f"No ratios bigger than zero")
+            # keep only ratios bigger than zero
+            ratio_dict = {k: v for k, v in ratio_dict.items() if v > 0}
+            # if we have any viable options, pick the one with the biggest ratio
+            if ratio_dict:
+                best_pair = max(ratio_dict, key=ratio_dict.get)
+                self.logger.info(f"Will be jumping from {coin} to {best_pair.to_coin_id}")
+                self.transaction_through_bridge(best_pair, all_tickers)
+            else:
+                self.logger.info(f"No ratios bigger than zero")
 
     def bridge_scout(self):
         """
