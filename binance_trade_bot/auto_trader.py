@@ -124,9 +124,15 @@ class AutoTrader:
             # Obtain (current coin)/(optional coin)
             coin_opt_coin_ratio = coin_price / optional_coin_price
 
+            print(f"{datetime.now()} - Transaction fee calculation",
+                  f"From coin: {pair.from_coin} ",
+                  f"To coin: {pair.to_coin} ",
+                  end="\n")
             transaction_fee = self.manager.get_fee(pair.from_coin, self.config.BRIDGE, True) + self.manager.get_fee(
                 pair.to_coin, self.config.BRIDGE, False
             )
+            print(f"{datetime.now()} - Finish fee calculation",
+                  end="\n")
 
             ratio_dict[pair] = (
                 coin_opt_coin_ratio - transaction_fee * self.config.SCOUT_MULTIPLIER * coin_opt_coin_ratio
@@ -142,11 +148,19 @@ class AutoTrader:
         # keep only ratios bigger than zero
         ratio_dict = {k: v for k, v in ratio_dict.items() if v > 0}
 
+        # for k, v in ratio_dict.items():
+        #    print(f"{k} --> {v}",
+        #          end="\n")
+        # keep only ratios bigger than zero
+        # ratio_dict = {k: v for k, v in ratio_dict.items() if v > 0}
+        
         # if we have any viable options, pick the one with the biggest ratio
         if ratio_dict:
             best_pair = max(ratio_dict, key=ratio_dict.get)
             self.logger.info(f"Will be jumping from {coin} to {best_pair.to_coin_id}")
             self.transaction_through_bridge(best_pair, all_tickers)
+        else:
+            self.logger.info(f"No ratios bigger than zero")
 
     def bridge_scout(self):
         """
