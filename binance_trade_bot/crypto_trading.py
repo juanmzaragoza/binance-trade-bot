@@ -33,6 +33,7 @@ def main():
 
     schedule = SafeScheduler(logger)
     schedule.every(config.SCOUT_SLEEP_TIME).seconds.do(trader.scout).tag("scouting")
+    schedule.every(1).minutes.do(trader.initialize).tag("initialization")
     if config.ENABLE_UPDATE_VALUES:
         schedule.every(1).minutes.do(trader.update_values).tag("updating value history")
     if config.ENABLE_PRUNE_SCOUT_HISTORY:

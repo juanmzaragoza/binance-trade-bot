@@ -73,6 +73,8 @@ class AutoTrader:
         """
         Initialize the buying threshold of all the coins for trading between them
         """
+        print(f"{datetime.now()} - Updating thresholds!",
+              end="\n")
         all_tickers = self.manager.get_all_market_tickers()
 
         session: Session
@@ -126,6 +128,7 @@ class AutoTrader:
 
             print(f"{datetime.now()} - Transaction fee calculation",
                   f"From coin: {pair.from_coin} ",
+                  f"Ratio: {pair.ratio} ",
                   f"To coin: {pair.to_coin} ",
                   end="\n")
             transaction_fee = self.manager.get_fee(pair.from_coin, self.config.BRIDGE, True) + self.manager.get_fee(
